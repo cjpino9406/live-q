@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Live Q — Diseño Nuevo</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080a0e;
+  --surface: #0e1118;
+  --surface2: #131720;
+  --border: #1c2133;
+  --orange: #ff6b1a;
+  --orange2: #ff8c42;
+  --green: #00e676;
+  --red: #ff3d5a;
+  --yellow: #ffd600;
+  --blue: #40c4ff;
+  --text: #e8eaf6;
+  --muted: #3d4a6b;
+  --muted2: #2a3350;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Mono', monospace;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* ── HEADER ─────────────────────────────────── */
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  letter-spacing: 4px;
+  color: var(--orange);
+  line-height: 1;
+}
+.logo span { color: var(--muted); font-size: 1rem; letter-spacing: 2px; margin-left: 6px; }
+
+/* Win rate header pill */
+.wr-pill {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 5px 10px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+}
+.wr-g { color: var(--green); font-family: 'Bebas Neue'; font-size: 1rem; }
+.wr-r { color: var(--red);   font-family: 'Bebas Neue'; font-size: 1rem; }
+.wr-divider { width: 1px; height: 14px; background: var(--border); }
+.wr-pct { color: var(--text); font-family: 'Bebas Neue'; font-size: 1rem; }
+
+/* ── QUARTER TABS ───────────────────────────── */
+.q-tabs {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid var(--border);
+}
+.q-tab {
+  padding: 10px 0;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-align: center;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all .15s;
+}
+.q-tab.active {
+  color: var(--orange);
+  border-bottom-color: var(--orange);
+  background: rgba(255,107,26,.05);
+}
+
+/* ── MAIN INPUT AREA ────────────────────────── */
+.main {
+  width: 100%;
+  max-width: 430px;
+  padding: 14px 14px 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Big number input with +/- buttons */
+.num-group {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.num-label {
+  font-size: 0.45rem;
+  letter-spacing: 2.5px;
+  color: var(--orange);
+  text-transform: uppercase;
+  padding: 8px 14px 4px;
+  border-bottom: 1px solid var(--border);
+}
+.num-row {
+  display: grid;
+  grid-template-columns: 52px 1fr 52px;
+  align-items: center;
+}
+.pm-btn {
+  height: 56px;
+  background: transparent;
+  border: none;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pm-btn:active { background: var(--surface2); color: var(--orange); }
+.num-input {
+  height: 56px;
+  background: transparent;
+  border: none;
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  color: var(--text);
+  text-align: center;
+  outline: none;
+  letter-spacing: 1px;
+  width: 100%;
+}
+.num-input::placeholder { color: var(--muted); }
+
+/* Score input — side by side with divider */
+.score-group {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.score-body {
+  display: grid;
+  grid-template-columns: 1fr 30px 1fr;
+  align-items: center;
+  height: 60px;
+}
+.score-input {
+  height: 100%;
+  background: transparent;
+  border: none;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  color: var(--text);
+  text-align: center;
+  outline: none;
+  letter-spacing: 1px;
+}
+.score-input::placeholder { color: var(--muted); font-size: 1.3rem; }
+.score-dash {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* Time remaining — big and prominent */
+.time-group {
+  background: var(--surface);
+  border: 1px solid var(--orange);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(255,107,26,.08);
+}
+.time-label {
+  font-size: 0.45rem;
+  letter-spacing: 2.5px;
+  color: var(--orange);
+  text-transform: uppercase;
+  padding: 8px 14px 4px;
+  border-bottom: 1px solid rgba(255,107,26,.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.time-hint { color: var(--muted); font-size: 0.42rem; }
+
+/* Line input */
+.line-group {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Betting window indicator */
+.window-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 0.52rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.window-bar.optimal { background: rgba(0,230,118,.07); border: 1px solid rgba(0,230,118,.2); color: var(--green); }
+.window-bar.early   { background: rgba(255,214,0,.07);  border: 1px solid rgba(255,214,0,.2);  color: var(--yellow); }
+.window-bar.late    { background: rgba(255,61,90,.07);  border: 1px solid rgba(255,61,90,.2);  color: var(--red); }
+.wdot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.optimal .wdot { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.early   .wdot { background: var(--yellow); }
+.late    .wdot { background: var(--red); }
+
+/* ── CALC BUTTON — fixed bottom ─────────────── */
+.calc-wrap {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 14px 20px;
+  background: linear-gradient(to top, var(--bg) 70%, transparent);
+  display: flex;
+  justify-content: center;
+  z-index: 10;
+}
+.calc-btn {
+  width: 100%;
+  max-width: 430px;
+  padding: 15px;
+  background: var(--orange);
+  border: none;
+  border-radius: 14px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 3px;
+  color: #000;
+  cursor: pointer;
+  transition: transform .1s, opacity .15s;
+  box-shadow: 0 4px 24px rgba(255,107,26,.35);
+}
+.calc-btn:active { transform: scale(.98); opacity: .9; }
+
+/* ── RESULT OVERLAY ─────────────────────────── */
+.result-sheet {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 20;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.result-sheet.show { display: flex; }
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 5;
+}
+.back-btn {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+.result-q { font-family: 'Bebas Neue'; font-size: 1rem; letter-spacing: 3px; color: var(--muted); }
+
+/* Big verdict display */
+.verdict-hero {
+  padding: 24px 16px 16px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+.verdict-window {
+  font-size: 0.5rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.verdict-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4rem, 20vw, 6rem);
+  line-height: 1;
+  color: var(--orange);
+  margin-bottom: 4px;
+}
+.verdict-num small { font-size: 1.5rem; color: var(--muted); }
+.verdict-badge {
+  display: inline-block;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  letter-spacing: 2px;
+  padding: 8px 20px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+.verdict-badge.over  { background: rgba(0,230,118,.12); color: var(--green); border: 1px solid rgba(0,230,118,.3); }
+.verdict-badge.under { background: rgba(255,61,90,.12); color: var(--red);   border: 1px solid rgba(255,61,90,.3); }
+.verdict-badge.push  { background: rgba(255,214,0,.1);  color: var(--yellow);border: 1px solid rgba(255,214,0,.25);}
+
+/* Conf bar */
+.conf-wrap { padding: 0 16px 16px; border-bottom: 1px solid var(--border); }
+.conf-top { display: flex; justify-content: space-between; font-size: 0.5rem; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; margin-top: 14px; }
+.conf-track { background: var(--surface2); border-radius: 4px; height: 6px; overflow: hidden; }
+.conf-fill { height: 100%; border-radius: 4px; }
+
+/* Reading */
+.reading { margin: 12px 16px; padding: 10px 14px; border-radius: 10px; font-size: 0.62rem; line-height: 1.8; }
+.reading.hot  { background: rgba(255,107,26,.07); border: 1px solid rgba(255,107,26,.2); color: var(--orange2); }
+.reading.cold { background: rgba(29,36,56,.6); border: 1px solid var(--border); color: var(--muted); }
+
+/* Breakdown */
+.bdown { margin: 0 16px 16px; display: grid; gap: 6px; }
+.brow { display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--muted); padding: 5px 0; border-bottom: 1px solid var(--muted2); }
+.brow:last-child { border-bottom: none; }
+.bval { color: var(--text); }
+.bval.grn { color: var(--green); }
+.bval.red { color: var(--red); }
+.bval.fire { color: var(--orange); }
+.bval.blue { color: var(--blue); }
+.bval.acc { color: var(--orange); font-family: 'Bebas Neue'; font-size: 1rem; }
+
+/* Real result entry */
+.real-entry {
+  margin: 0 16px 16px;
+  background: var(--surface2);
+  border: 1px solid rgba(64,196,255,.25);
+  border-radius: 12px;
+  padding: 14px;
+}
+.real-label { font-size: 0.45rem; letter-spacing: 2px; color: var(--blue); text-transform: uppercase; margin-bottom: 10px; }
+.real-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; }
+.real-input {
+  background: var(--bg);
+  border: 1px solid rgba(64,196,255,.3);
+  border-radius: 8px;
+  padding: 8px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  color: var(--text);
+  text-align: center;
+  outline: none;
+  letter-spacing: 1px;
+}
+.reg-btn {
+  padding: 10px 16px;
+  background: transparent;
+  border: 1px solid var(--blue);
+  border-radius: 8px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  color: var(--blue);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* Feedback banner */
+.feedback {
+  margin: 0 16px 16px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  animation: pop .2s ease;
+}
+@keyframes pop { from { opacity:0; transform:scale(.95); } to { opacity:1; transform:scale(1); } }
+.feedback.hit  { background: rgba(0,230,118,.1); border: 1px solid rgba(0,230,118,.3); }
+.feedback.miss { background: rgba(255,61,90,.1); border: 1px solid rgba(255,61,90,.3); }
+.fb-icon { font-size: 2.2rem; line-height: 1; }
+.fb-title { font-family: 'Bebas Neue'; font-size: 1.4rem; letter-spacing: 2px; line-height: 1; margin-bottom: 3px; }
+.feedback.hit  .fb-title { color: var(--green); }
+.feedback.miss .fb-title { color: var(--red); }
+.fb-sub { font-size: 0.5rem; letter-spacing: 1px; color: var(--muted); line-height: 1.6; }
+
+/* Cal panel */
+.cal-section { margin: 0 16px 16px; }
+.cal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.cal-title { font-family: 'Bebas Neue'; font-size: 1rem; letter-spacing: 2px; color: var(--blue); }
+.reset-btn { font-size: 0.45rem; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; cursor: pointer; padding: 4px 8px; border: 1px solid var(--border); border-radius: 5px; background: transparent; }
+
+.wr-box { display: flex; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 8px; }
+.wr-col { flex: 1; padding: 10px 8px; text-align: center; }
+.wr-col + .wr-col { border-left: 1px solid var(--border); }
+.wr-num { font-family: 'Bebas Neue'; font-size: 1.6rem; line-height: 1; }
+.wr-num.g { color: var(--green); }
+.wr-num.r { color: var(--red); }
+.wr-num.w { color: var(--text); }
+.wr-lbl { font-size: 0.42rem; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; margin-top: 2px; }
+
+.hist { display: grid; gap: 5px; }
+.hist-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; font-size: 0.58rem; }
+.hist-left { color: var(--muted); }
+.hist-right { display: flex; gap: 8px; align-items: center; }
+.herr { font-family: 'Bebas Neue'; font-size: 0.95rem; }
+.herr.pos { color: var(--orange); }
+.herr.neg { color: var(--blue); }
+.hres { font-family: 'Bebas Neue'; font-size: 1.1rem; }
+.hres.hit  { color: var(--green); }
+.hres.miss { color: var(--red); }
+
+.note { font-size: 0.48rem; color: var(--muted); text-align: center; letter-spacing: 1px; padding: 16px; line-height: 1.9; }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<div class="header">
+  <div class="logo">LIVE Q<span>NBA</span></div>
+  <div class="wr-pill">
+    <span class="wr-g" id="wr-hit">7</span>
+    <span style="color:var(--muted);font-size:0.6rem">✓</span>
+    <div class="wr-divider"></div>
+    <span class="wr-r" id="wr-miss">3</span>
+    <span style="color:var(--muted);font-size:0.6rem">✗</span>
+    <div class="wr-divider"></div>
+    <span class="wr-pct" id="wr-pct">70%</span>
+  </div>
+</div>
+
+<!-- ── QUARTER TABS ── -->
+<div class="q-tabs">
+  <div class="q-tab active" data-q="1">Q1</div>
+  <div class="q-tab" data-q="2">Q2</div>
+  <div class="q-tab" data-q="3">Q3</div>
+  <div class="q-tab" data-q="4">Q4</div>
+</div>
+
+<!-- ── INPUTS ── -->
+<div class="main">
+
+  <!-- Betting window indicator -->
+  <div class="window-bar optimal" id="window-bar">
+    <div class="wdot"></div>
+    <span id="window-txt">VENTANA ÓPTIMA · Min 5:00 — datos confiables</span>
+  </div>
+
+  <!-- Puntos anotados -->
+  <div class="num-group">
+    <div class="num-label">Puntos anotados en el cuarto</div>
+    <div class="num-row">
+      <button class="pm-btn" onclick="adjust('pts',-1)">−</button>
+      <input type="number" class="num-input" id="pts" placeholder="0" inputmode="numeric">
+      <button class="pm-btn" onclick="adjust('pts',1)">+</button>
+    </div>
+  </div>
+
+  <!-- Tiempo RESTANTE -->
+  <div class="time-group">
+    <div class="time-label">
+      <span>Tiempo restante en el cuarto</span>
+      <span class="time-hint">Lo que ves en pantalla</span>
+    </div>
+    <div class="num-row">
+      <button class="pm-btn" onclick="adjust('trem',-.5)">−</button>
+      <input type="number" class="num-input" id="trem" placeholder="6.0" step="0.5" inputmode="decimal" oninput="updateWindow()">
+      <button class="pm-btn" onclick="adjust('trem',.5)">+</button>
+    </div>
+  </div>
+
+  <!-- Marcador del cuarto -->
+  <div class="score-group">
+    <div class="num-label">Marcador del cuarto</div>
+    <div style="display:grid;grid-template-columns:1fr 24px 1fr;align-items:center">
+      <div class="num-row">
+        <button class="pm-btn" onclick="adjust('s1',-1)">−</button>
+        <input type="number" class="num-input" id="s1" placeholder="0" inputmode="numeric">
+        <button class="pm-btn" onclick="adjust('s1',1)">+</button>
+      </div>
+      <div style="font-family:'Bebas Neue';font-size:1.4rem;color:var(--muted);text-align:center;border-left:1px solid var(--border);border-right:1px solid var(--border);height:100%;display:flex;align-items:center;justify-content:center">–</div>
+      <div class="num-row">
+        <button class="pm-btn" onclick="adjust('s2',-1)">−</button>
+        <input type="number" class="num-input" id="s2" placeholder="0" inputmode="numeric">
+        <button class="pm-btn" onclick="adjust('s2',1)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Marcador total -->
+  <div class="score-group">
+    <div class="num-label">Marcador total del partido ★</div>
+    <div style="display:grid;grid-template-columns:1fr 24px 1fr;align-items:center">
+      <div class="num-row">
+        <button class="pm-btn" onclick="adjust('g1',-1)">−</button>
+        <input type="number" class="num-input" id="g1" placeholder="0" inputmode="numeric">
+        <button class="pm-btn" onclick="adjust('g1',1)">+</button>
+      </div>
+      <div style="font-family:'Bebas Neue';font-size:1.4rem;color:var(--muted);text-align:center;border-left:1px solid var(--border);border-right:1px solid var(--border);height:100%;display:flex;align-items:center;justify-content:center">–</div>
+      <div class="num-row">
+        <button class="pm-btn" onclick="adjust('g2',-1)">−</button>
+        <input type="number" class="num-input" id="g2" placeholder="0" inputmode="numeric">
+        <button class="pm-btn" onclick="adjust('g2',1)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Línea -->
+  <div class="line-group">
+    <div class="num-label">Línea de la casa (O/U)</div>
+    <div class="num-row">
+      <button class="pm-btn" onclick="adjust('line',-.5)">−</button>
+      <input type="number" class="num-input" id="line" placeholder="55.5" step="0.5" inputmode="decimal">
+      <button class="pm-btn" onclick="adjust('line',.5)">+</button>
+    </div>
+  </div>
+
+  <div class="note">⚠️ Solo con fines informativos. Apuesta con responsabilidad.</div>
+</div>
+
+<!-- ── CALC BUTTON FIXED ── -->
+<div class="calc-wrap">
+  <button class="calc-btn" onclick="calcular()">CALCULAR</button>
+</div>
+
+<!-- ── RESULT SHEET (full screen overlay) ── -->
+<div class="result-sheet" id="result-sheet">
+
+  <div class="result-header">
+    <button class="back-btn" onclick="closeResult()">← VOLVER</button>
+    <span class="result-q" id="result-q">Q1</span>
+    <span style="font-size:0.5rem;letter-spacing:1px;color:var(--muted)" id="result-trust"></span>
+  </div>
+
+  <!-- Verdict hero -->
+  <div class="verdict-hero">
+    <div class="verdict-window" id="vw-bar">
+      <span style="width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;box-shadow:0 0 6px var(--green)"></span>
+      VENTANA ÓPTIMA
+    </div>
+    <div class="verdict-num" id="proj-num">—<small>pts</small></div>
+    <div id="verdict-wrap"></div>
+  </div>
+
+  <!-- Confidence -->
+  <div class="conf-wrap">
+    <div class="conf-top">
+      <span>Confianza</span>
+      <span id="conf-pct">—</span>
+    </div>
+    <div class="conf-track">
+      <div class="conf-fill" id="conf-fill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <!-- Reading -->
+  <div class="reading hot" id="reading-box">—</div>
+
+  <!-- Breakdown -->
+  <div class="bdown" id="bdown"></div>
+
+  <!-- Feedback -->
+  <div class="feedback hit" id="feedback" style="display:none">
+    <div class="fb-icon" id="fb-icon"></div>
+    <div>
+      <div class="fb-title" id="fb-title"></div>
+      <div class="fb-sub" id="fb-sub"></div>
+    </div>
+  </div>
+
+  <!-- Real entry -->
+  <div class="real-entry" id="real-card" style="display:none">
+    <div class="real-label">¿Cómo terminó el cuarto?</div>
+    <div class="real-row">
+      <input type="number" class="real-input" id="real-pts" placeholder="57" inputmode="numeric">
+      <button class="reg-btn" onclick="registrar()">REGISTRAR</button>
+    </div>
+  </div>
+
+  <!-- Cal panel -->
+  <div class="cal-section" id="cal-panel" style="display:none">
+    <div class="cal-head">
+      <span class="cal-title">CALIBRACIÓN</span>
+      <button class="reset-btn" onclick="resetCal()">LIMPIAR</button>
+    </div>
+    <div class="wr-box">
+      <div class="wr-col"><div class="wr-num g" id="cal-hit">0</div><div class="wr-lbl">Aciertos</div></div>
+      <div class="wr-col"><div class="wr-num r" id="cal-miss">0</div><div class="wr-lbl">Fallos</div></div>
+      <div class="wr-col"><div class="wr-num w" id="cal-pct">—</div><div class="wr-lbl">% Acierto</div></div>
+    </div>
+    <div class="hist" id="hist"></div>
+  </div>
+
+  <div style="height:30px"></div>
+</div>
+
+<script>
+  let currentQ = 1;
+  let lastSnap = JSON.parse(localStorage.getItem('liveq-snap') || 'null');
+  let history  = JSON.parse(localStorage.getItem('liveq-history') || '[]');
+
+  function saveHistory() { localStorage.setItem('liveq-history', JSON.stringify(history)); }
+  function saveSnap()    { lastSnap ? localStorage.setItem('liveq-snap', JSON.stringify(lastSnap)) : localStorage.removeItem('liveq-snap'); }
+
+  function vn(id, fb) { const n = parseFloat(document.getElementById(id).value); return isNaN(n) ? fb : n; }
+  function bias() { return history.length ? history.reduce((a,r) => a+r.error, 0) / history.length : 0; }
+
+  function adjust(id, delta) {
+    const el = document.getElementById(id);
+    const cur = parseFloat(el.value) || 0;
+    el.value = Math.max(0, +(cur + delta).toFixed(1));
+    if (id === 'trem') updateWindow();
+  }
+
+  function marginInfo(a, b) {
+    const d = Math.abs(a-b);
+    if (d <= 3)  return { level:'muy cerrado', close:true,  bonus: 0.9  };
+    if (d <= 6)  return { level:'cerrado',     close:true,  bonus: 0.55 };
+    if (d <= 10) return { level:'parejo',      close:false, bonus: 0.15 };
+    if (d <= 16) return { level:'abierto',     close:false, bonus:-0.1  };
+    return               { level:'dominado',   close:false, bonus:-0.25 };
+  }
+  function gameInfo(a, b) {
+    const d = Math.abs(a-b);
+    if (d <= 5)  return { level:'reñido',    close:true,  gb: 1.2  };
+    if (d <= 12) return { level:'parejo',    close:true,  gb: 0.5  };
+    if (d <= 20) return { level:'distancia', close:false, gb:-0.3  };
+    return               { level:'dominado', close:false, gb:-0.9  };
+  }
+
+  // Quarter tabs
+  document.querySelectorAll('.q-tab').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.q-tab').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      currentQ = +b.dataset.q;
+    });
+  });
+
+  function updateWindow() {
+    const trem = vn('trem', NaN);
+    const bar = document.getElementById('window-bar');
+    const txt = document.getElementById('window-txt');
+    if (isNaN(trem)) { bar.className = 'window-bar early'; txt.textContent = 'Ingresa el tiempo restante'; return; }
+    if (trem >= 3.5 && trem <= 7) {
+      bar.className = 'window-bar optimal';
+      txt.textContent = `VENTANA ÓPTIMA · ${trem} min restantes — momento ideal`;
+    } else if (trem > 7) {
+      bar.className = 'window-bar early';
+      txt.textContent = `Temprano · La línea puede moverse antes del min 5`;
+    } else {
+      bar.className = 'window-bar late';
+      txt.textContent = `Línea probablemente cerrada · Solo referencia`;
+    }
+  }
+
+  function calcular() {
+    const pts  = vn('pts', 0);
+    const trem = vn('trem', NaN); // tiempo RESTANTE
+    const s1   = vn('s1', 0);
+    const s2   = vn('s2', 0);
+    const g1   = vn('g1', NaN);
+    const g2   = vn('g2', NaN);
+    const line = vn('line', 55);
+
+    if (isNaN(trem) || pts <= 0) { alert('Ingresa los puntos y el tiempo restante.'); return; }
+    if (isNaN(g1) || isNaN(g2)) { alert('Ingresa el marcador total del partido.'); return; }
+
+    const mins     = Math.max(0, 12 - trem);
+    const timeLeft = trem;
+    const pace     = mins > 0 ? pts / mins : pts / 0.5;
+    const avgPace  = 53 / 12;
+    const trust    = mins >= 4 ? 1 : Math.min(mins / 4, 1);
+    const blendPace = pace * trust + avgPace * (1 - trust);
+    let raw = pts + blendPace * timeLeft;
+
+    const qi = marginInfo(s1, s2);
+    const qu = timeLeft <= 3 ? 1.0 : timeLeft <= 6 ? 0.6 : 0.3;
+    let qAdj = qi.bonus * qu * 4;
+    if (currentQ === 4) {
+      if (qi.level==='muy cerrado'||qi.level==='cerrado') qAdj *= 1.4;
+      else if (qi.level==='dominado') qAdj *= 1.3;
+    }
+    raw += qAdj;
+
+    const gi = gameInfo(g1, g2);
+    const gu = timeLeft <= 4 ? 1.0 : timeLeft <= 8 ? 0.65 : 0.35;
+    const gAdj = gi.gb * gu * 6;
+    raw += gAdj;
+    raw = Math.max(raw, pts);
+
+    const inWindow = timeLeft >= 3.5 && timeLeft <= 7;
+    const b    = bias();
+    const corr = raw - b;
+    const n    = history.length;
+    const diff = corr - line;
+    const absDiff = Math.abs(diff);
+
+    let vClass;
+    if (absDiff < 0.5) vClass = 'push';
+    else if (diff > 0) vClass = 'over';
+    else               vClass = 'under';
+    const verdictLabel = vClass==='push' ? 'PUSH' : vClass==='over' ? `OVER +${diff.toFixed(1)}` : `UNDER ${diff.toFixed(1)}`;
+
+    let conf = 40 + trust * 35;
+    if (absDiff > 5) conf += 15; else if (absDiff > 2.5) conf += 8;
+    if (Math.abs(s1-s2) > 10) conf += 5;
+    conf += 5;
+    if (inWindow) conf = Math.min(conf + 8, 95);
+    if (n >= 3) conf = Math.min(conf + 5, 95);
+    conf = Math.min(Math.round(conf), 95);
+
+    let msg, hot;
+    const qd = Math.abs(s1-s2), gd = Math.abs(g1-g2);
+    const q4 = currentQ===4 ? ' · Q4' : '';
+    if (gi.level==='reñido'&&(qi.level==='muy cerrado'||qi.level==='cerrado')) { msg=`🔥🔥 Juego y cuarto muy cerrados${q4}. Faltas, posesiones extra, tiros libres probables.`; hot=true; }
+    else if (gi.level==='reñido')    { msg=`🔥 Juego reñido (${gd} pts)${q4}. Ritmo alto.`; hot=true; }
+    else if (qi.level==='muy cerrado') { msg=`🔥 Cuarto muy cerrado (${qd} pts)${q4}. Intensidad alta.`; hot=true; }
+    else if (qi.level==='cerrado')   { msg=`⚡ Cuarto cerrado (${qd} pts)${q4}. Ritmo se mantiene.`; hot=true; }
+    else if (gi.level==='dominado')  { msg=`Juego dominado (${gd} pts)${q4}. Rotaciones — total tiende a bajar.`; hot=false; }
+    else if (qi.level==='abierto')   { msg=`Cuarto abierto (${qd} pts)${q4}. El líder administra.`; hot=false; }
+    else if (qi.level==='dominado')  { msg=`Cuarto dominado (${qd} pts)${q4}. Ritmo baja.`; hot=false; }
+    else                             { msg=`Cuarto parejo (${qd} pts)${q4}. Pace actual es el indicador.`; hot=false; }
+
+    lastSnap = { rawProj:raw, corrected:corr, vClass, line, q:currentQ,
+                 pts, trem, s1, s2, g1, g2, conf, qAdj, gAdj, raw,
+                 qi, gi, msg, hot, timeLeft, pace, trust, inWindow, n };
+    saveSnap();
+
+    // Render result sheet
+    document.getElementById('result-q').textContent = `Q${currentQ}`;
+    document.getElementById('result-trust').textContent = `${Math.round(trust*100)}% pace real`;
+    document.getElementById('proj-num').innerHTML = `${corr.toFixed(1)}<small>pts</small>`;
+    document.getElementById('verdict-wrap').innerHTML = `<div class="verdict-badge ${vClass}">${verdictLabel}</div>`;
+    document.getElementById('conf-pct').textContent = `${conf}%`;
+    const fill = document.getElementById('conf-fill');
+    fill.style.width = conf + '%';
+    fill.style.background = conf >= 70 ? 'var(--green)' : conf >= 55 ? 'var(--yellow)' : 'var(--orange)';
+
+    const vwBar = document.getElementById('vw-bar');
+    if (inWindow) { vwBar.style.color='var(--green)'; vwBar.innerHTML=`<span style="width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;box-shadow:0 0 6px var(--green)"></span> VENTANA ÓPTIMA`; }
+    else if (timeLeft > 7) { vwBar.style.color='var(--yellow)'; vwBar.innerHTML=`<span style="width:7px;height:7px;border-radius:50%;background:var(--yellow);display:inline-block"></span> TEMPRANO`; }
+    else { vwBar.style.color='var(--red)'; vwBar.innerHTML=`<span style="width:7px;height:7px;border-radius:50%;background:var(--red);display:inline-block"></span> LÍNEA CERRADA`; }
+
+    document.getElementById('reading-box').innerHTML = msg;
+    document.getElementById('reading-box').className = 'reading ' + (hot ? 'hot' : 'cold');
+
+    const qs = qAdj>=0?'+':'', gs = gAdj>=0?'+':'';
+    const biasRow = n > 0 ? `<div class="brow"><span>Corrección calibración (${n})</span><span class="bval blue">${b>=0?'−':'+'}${Math.abs(b).toFixed(1)} pts</span></div>` : '';
+    const rawRow  = n > 0 ? `<div class="brow"><span>Proyección bruta</span><span class="bval">${raw.toFixed(1)}</span></div>` : '';
+    document.getElementById('bdown').innerHTML = `
+      <div class="brow"><span>Puntos / Tiempo restante</span><span class="bval">${pts} pts · ${trem} min</span></div>
+      <div class="brow"><span>Pace actual</span><span class="bval">${pace.toFixed(2)} pts/min</span></div>
+      <div class="brow"><span>Confianza en pace</span><span class="bval ${trust>=1?'grn':'fire'}">${Math.round(trust*100)}%</span></div>
+      <div class="brow"><span>Marcador Q · ajuste</span><span class="bval ${qAdj>=0?'fire':'red'}">${s1}–${s2} · ${qs}${qAdj.toFixed(1)}</span></div>
+      <div class="brow"><span>Partido · ajuste</span><span class="bval ${gAdj>=0?'fire':'red'}">${g1}–${g2} · ${gs}${gAdj.toFixed(1)}</span></div>
+      ${rawRow}${biasRow}
+      <div class="brow"><span>Proyección${n>0?' calibrada':''}</span><span class="bval acc">${corr.toFixed(1)} pts</span></div>
+      <div class="brow"><span>Línea · Diferencia</span><span class="bval ${diff>0?'grn':diff<0?'red':''}">${line} · ${diff>0?'+':''}${diff.toFixed(1)}</span></div>
+    `;
+
+    document.getElementById('feedback').style.display = 'none';
+    document.getElementById('real-pts').value = '';
+    document.getElementById('real-card').style.display = 'block';
+    renderCal();
+
+    // Show result sheet
+    document.getElementById('result-sheet').classList.add('show');
+    document.getElementById('result-sheet').scrollTop = 0;
+
+    // Haptic feedback
+    if (navigator.vibrate) navigator.vibrate(40);
+  }
+
+  function closeResult() {
+    document.getElementById('result-sheet').classList.remove('show');
+  }
+
+  function registrar() {
+    const real = vn('real-pts', NaN);
+    if (isNaN(real)) { alert('Ingresa el total real.'); return; }
+    if (!lastSnap)   { alert('Calcula primero.'); return; }
+
+    const { rawProj, corrected, vClass, line } = lastSnap;
+    const error = rawProj - real;
+    let hit;
+    if (vClass==='over')  hit = real > line;
+    else if (vClass==='under') hit = real < line;
+    else hit = Math.abs(real - line) < 0.5;
+
+    history.push({ q:currentQ, rawProj, corrected, real, error, hit, vClass, line });
+    saveHistory();
+
+    const fb = document.getElementById('feedback');
+    fb.style.display = 'flex';
+    fb.className = 'feedback ' + (hit ? 'hit' : 'miss');
+    document.getElementById('fb-icon').textContent = hit ? '✓' : '✗';
+    document.getElementById('fb-title').textContent = hit ? 'ACIERTO' : 'FALLO';
+    document.getElementById('fb-sub').textContent = `Q${currentQ} terminó ${real} pts · línea ${line} · ${vClass.toUpperCase()} ${hit?'confirmado':'incorrecto'}`;
+
+    document.getElementById('real-card').style.display = 'none';
+    lastSnap = null;
+    saveSnap();
+    renderCal();
+    updateHeaderWR();
+  }
+
+  function renderCal() {
+    const panel = document.getElementById('cal-panel');
+    if (!history.length) { panel.style.display = 'none'; return; }
+    panel.style.display = 'block';
+
+    const hits = history.filter(r => r.hit).length;
+    const total = history.length;
+    const pct = Math.round(hits/total*100);
+    document.getElementById('cal-hit').textContent  = hits;
+    document.getElementById('cal-miss').textContent = total - hits;
+    document.getElementById('cal-pct').textContent  = pct + '%';
+
+    document.getElementById('hist').innerHTML = [...history].reverse().map(r => {
+      const e = r.error, es = e>0?'+':'', cls = Math.abs(e)<0.5?'nt':e>0?'pos':'neg';
+      return `<div class="hist-row">
+        <span class="hist-left">Q${r.q} · proj ${r.corrected.toFixed(1)} → real ${r.real} · ${r.line}</span>
+        <span class="hist-right">
+          <span class="herr ${cls}">${es}${e.toFixed(1)}</span>
+          <span class="hres ${r.hit?'hit':'miss'}">${r.hit?'✓':'✗'}</span>
+        </span>
+      </div>`;
+    }).join('');
+  }
+
+  function updateHeaderWR() {
+    const hits = history.filter(r => r.hit).length;
+    const total = history.length;
+    document.getElementById('wr-hit').textContent  = hits;
+    document.getElementById('wr-miss').textContent = total - hits;
+    document.getElementById('wr-pct').textContent  = total ? Math.round(hits/total*100)+'%' : '—';
+  }
+
+  function resetCal() {
+    if (!confirm('¿Borrar historial?')) return;
+    history = []; lastSnap = null;
+    localStorage.removeItem('liveq-history');
+    localStorage.removeItem('liveq-snap');
+    document.getElementById('cal-panel').style.display = 'none';
+    document.getElementById('feedback').style.display = 'none';
+    updateHeaderWR();
+  }
+
+  // Init
+  window.addEventListener('DOMContentLoaded', () => {
+    updateHeaderWR();
+    if (history.length) renderCal();
+    if (lastSnap) {
+      // Restore form
+      if (lastSnap.pts  !== undefined) document.getElementById('pts').value  = lastSnap.pts;
+      if (lastSnap.trem !== undefined) document.getElementById('trem').value = lastSnap.trem;
+      if (lastSnap.s1   !== undefined) document.getElementById('s1').value   = lastSnap.s1;
+      if (lastSnap.s2   !== undefined) document.getElementById('s2').value   = lastSnap.s2;
+      if (lastSnap.g1   !== undefined) document.getElementById('g1').value   = lastSnap.g1;
+      if (lastSnap.g2   !== undefined) document.getElementById('g2').value   = lastSnap.g2;
+      if (lastSnap.line !== undefined) document.getElementById('line').value = lastSnap.line;
+      updateWindow();
+    }
+  });
+</script>
+</body>
+</html>
